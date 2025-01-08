@@ -32,6 +32,8 @@ public class UserService {
         user.setBirthDate(userDTO.birthDate());
         user.setEmail(userDTO.email());
         user.setFullName(userDTO.fullName());
+        user.setLocations(userDTO.locations());
+        user.setDevices(userDTO.devices());
 
         return userRepository.save(user);
     }

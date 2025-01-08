@@ -1,6 +1,16 @@
 package br.com.pedroaart.featureextraction.controllers.user;
 
-import java.time.LocalDate;
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 
-public record UserDTO(String fullName, String email, LocalDate birthDate) {
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
+
+public record UserDTO(
+        String fullName,
+        String email,
+        LocalDate birthDate,
+        Map<String, GeoJsonPoint> locations,
+        List<String> devices
+) {
 }
