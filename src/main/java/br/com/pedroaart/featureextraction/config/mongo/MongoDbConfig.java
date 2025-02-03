@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.SimpleMongoClientDatabaseFactory;
 public class MongoDbConfig {
     @Bean
     public MongoDatabaseFactory mongoConfigure() {
-        return new SimpleMongoClientDatabaseFactory("");
+        return new SimpleMongoClientDatabaseFactory("mongodb+srv://pedroaart:Pimentas1#@feature-extraction.x2phx.mongodb.net/feature-extraction");
     }
 
     @Bean
