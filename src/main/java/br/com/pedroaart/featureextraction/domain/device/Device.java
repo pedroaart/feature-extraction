@@ -14,9 +14,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Device {
     @Id
     private String id;
-    private String bluetoothAddress;
+    private String androidId;
 
     public Device(DeviceDTO deviceDTO) {
-        this.bluetoothAddress = deviceDTO.bluetoothAddress();
+        this.androidId = deviceDTO.bluetoothAddress();
     }
 }

@@ -30,7 +30,6 @@ public class UserService {
         User user = this.userRepository.findById(id).orElseThrow(UserNotFoundException::new);
 
         user.setBirthDate(userDTO.birthDate());
-        user.setEmail(userDTO.email());
         user.setFullName(userDTO.fullName());
         user.setLocations(userDTO.locations());
         user.setDevices(userDTO.devices());

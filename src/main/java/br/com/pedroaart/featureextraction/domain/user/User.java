@@ -20,14 +20,12 @@ public class User {
     @Id
     private String id;
     private String fullName;
-    private String email;
     private LocalDate birthDate;
     private Map<String, GeoJsonPoint> locations;
     private List<String> devices;
 
     public User(UserDTO userDTO) {
         this.fullName = userDTO.fullName();
-        this.email = userDTO.email();
         this.birthDate = userDTO.birthDate();
         this.locations = userDTO.locations();
         this.devices = userDTO.devices();

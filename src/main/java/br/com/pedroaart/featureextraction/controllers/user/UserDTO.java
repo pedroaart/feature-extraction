@@ -8,7 +8,6 @@ import java.util.Map;
 
 public record UserDTO(
         String fullName,
-        String email,
         LocalDate birthDate,
         Map<String, GeoJsonPoint> locations,
         List<String> devices
