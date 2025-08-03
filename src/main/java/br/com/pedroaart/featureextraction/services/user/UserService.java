@@ -5,15 +5,14 @@ import br.com.pedroaart.featureextraction.domain.user.User;
 import br.com.pedroaart.featureextraction.domain.user.exeptions.UserNotFoundException;
 import br.com.pedroaart.featureextraction.repositories.UserRepository;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -39,7 +38,11 @@ public class UserService {
 
         if(userDTO.birthDate()!=null) user.setBirthDate(userDTO.birthDate());
         if(userDTO.fullName()!=null && !user.getFullName().isEmpty()) user.setFullName(userDTO.fullName());
-        if(userDTO.locations()!=null) user.setLocations(userDTO.locations());
+        if (userDTO.locations() != null) {
+            Map<String, GeoJsonPoint> mergedLocations = new HashMap<>(user.getLocations());
+            mergedLocations.putAll(userDTO.locations());
+            user.setLocations(mergedLocations);
+        }
         if(userDTO.devices()!=null) user.setDevices(userDTO.devices());
 
         return userRepository.save(user);
