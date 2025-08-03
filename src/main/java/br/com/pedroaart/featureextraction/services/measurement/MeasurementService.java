@@ -42,4 +42,12 @@ public class MeasurementService {
         measurementRepository.saveAll(measurements);
 
     }
+
+    public List<Measurement> findByUserId(String userId) {
+        return measurementRepository.findByUserId(userId);
+    }
+
+    public List<Measurement> findAll() {
+        return measurementRepository.findAll();
+    }
 }

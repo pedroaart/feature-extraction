@@ -36,17 +36,20 @@ public class UserService {
     public User update(String id, UserDTO userDTO) {
         User user = this.userRepository.findById(id).orElseThrow(UserNotFoundException::new);
 
-        if(userDTO.birthDate()!=null) user.setBirthDate(userDTO.birthDate());
-        if(userDTO.fullName()!=null && !user.getFullName().isEmpty()) user.setFullName(userDTO.fullName());
+        if (userDTO.birthDate() != null) user.setBirthDate(userDTO.birthDate());
+        if (userDTO.fullName() != null && !user.getFullName().isEmpty()) user.setFullName(userDTO.fullName());
         if (userDTO.locations() != null) {
-            Map<String, GeoJsonPoint> mergedLocations = new HashMap<>(user.getLocations());
+            Map<String, GeoJsonPoint> mergedLocations = new HashMap<>(
+                    user.getLocations() != null ? user.getLocations() : Collections.emptyMap()
+            );
             mergedLocations.putAll(userDTO.locations());
             user.setLocations(mergedLocations);
         }
-        if(userDTO.devices()!=null) user.setDevices(userDTO.devices());
+        if (userDTO.devices() != null) user.setDevices(userDTO.devices());
 
         return userRepository.save(user);
     }
+
 
     public User find(String id, String fullName, String email, String birthDate) {
         Query query = new Query();

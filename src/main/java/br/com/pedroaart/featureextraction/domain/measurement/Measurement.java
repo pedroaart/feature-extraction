@@ -29,7 +29,10 @@ public class Measurement {
         this.timestamp = measurementDTO.timestamp();
         this.accuracy = measurementDTO.accuracy();
         this.location = new GeoJsonPoint(measurementDTO.location());
-        this.metadata = new Metadata(measurementDTO.metadata().deviceId(), measurementDTO.metadata().userId());
+        this.metadata = new Metadata(measurementDTO.metadata().deviceId(),
+                measurementDTO.metadata().userId(),
+                measurementDTO.metadata().tag(),
+                measurementDTO.metadata().type());
     }
 
     @Getter
@@ -42,11 +45,17 @@ public class Measurement {
         private Device device;
         @Transient
         private User user;
-        private MeasurementType measurementType;
+        private MeasurementTypeEnum measurementTypeEnum;
+        private String tag;
 
-        public Metadata(String deviceId, String userId) {
+        public Metadata(String deviceId,
+                        String userId,
+                        String tag,
+                        MeasurementTypeEnum type) {
             this.deviceId = deviceId;
             this.userId = userId;
+            this.tag = tag;
+            this.measurementTypeEnum = type;
         }
     }
 }
