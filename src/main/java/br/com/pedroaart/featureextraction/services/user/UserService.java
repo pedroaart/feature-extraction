@@ -4,17 +4,25 @@ import br.com.pedroaart.featureextraction.controllers.user.UserDTO;
 import br.com.pedroaart.featureextraction.domain.user.User;
 import br.com.pedroaart.featureextraction.domain.user.exeptions.UserNotFoundException;
 import br.com.pedroaart.featureextraction.repositories.UserRepository;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final MongoTemplate mongoTemplate;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, MongoTemplate mongoTemplate) {
         this.userRepository = userRepository;
+        this.mongoTemplate = mongoTemplate;
     }
 
     public User createUser(UserDTO userDTO) {
@@ -29,20 +37,43 @@ public class UserService {
     public User update(String id, UserDTO userDTO) {
         User user = this.userRepository.findById(id).orElseThrow(UserNotFoundException::new);
 
-        user.setBirthDate(userDTO.birthDate());
-        user.setFullName(userDTO.fullName());
-        user.setLocations(userDTO.locations());
-        user.setDevices(userDTO.devices());
+        if(userDTO.birthDate()!=null) user.setBirthDate(userDTO.birthDate());
+        if(userDTO.fullName()!=null && !user.getFullName().isEmpty()) user.setFullName(userDTO.fullName());
+        if(userDTO.locations()!=null) user.setLocations(userDTO.locations());
+        if(userDTO.devices()!=null) user.setDevices(userDTO.devices());
 
         return userRepository.save(user);
     }
 
-    public User find(String id,
-                     String fullName,
-                     String email,
-                     String birthDate) {
-        return null;
+    public User find(String id, String fullName, String email, String birthDate) {
+        Query query = new Query();
+        List<Criteria> criteriaList = new ArrayList<>();
+
+        if (id != null) {
+            criteriaList.add(Criteria.where("id").is(id));
+        }
+        if (fullName != null) {
+            criteriaList.add(Criteria.where("fullName").regex(fullName, "i"));
+        }
+        if (email != null) {
+            criteriaList.add(Criteria.where("email").is(email));
+        }
+        if (birthDate != null) {
+            try {
+                LocalDate parsedDate = LocalDate.parse(birthDate);
+                criteriaList.add(Criteria.where("birthDate").is(parsedDate));
+            } catch (DateTimeParseException e) {
+                throw new IllegalArgumentException("Formato de data inválido. Use yyyy-MM-dd.");
+            }
+        }
+
+        if (!criteriaList.isEmpty()) {
+            query.addCriteria(new Criteria().andOperator(criteriaList.toArray(new Criteria[0])));
+        }
+
+        return mongoTemplate.findOne(query, User.class);
     }
+
 
     public Optional<User> findById(String id) {
         return userRepository.findById(id);

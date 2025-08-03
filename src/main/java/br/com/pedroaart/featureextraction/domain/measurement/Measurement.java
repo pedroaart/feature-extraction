@@ -42,6 +42,7 @@ public class Measurement {
         private Device device;
         @Transient
         private User user;
+        private MeasurementType measurementType;
 
         public Metadata(String deviceId, String userId) {
             this.deviceId = deviceId;
@@ -49,3 +50,4 @@ public class Measurement {
         }
     }
 }
+
