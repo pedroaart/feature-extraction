@@ -28,6 +28,12 @@ public class MeasurementController {
         return ResponseEntity.ok(measurements);
     }
 
+    @DeleteMapping("/user/{userId}")
+    public ResponseEntity<Void> deleteAllByUserId(@PathVariable String userId) {
+        measurementService.deleteAllByUserId(userId);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/findAll")
     public ResponseEntity<List<Measurement>> findAll() {
         List<Measurement> measurements = measurementService.findAll();

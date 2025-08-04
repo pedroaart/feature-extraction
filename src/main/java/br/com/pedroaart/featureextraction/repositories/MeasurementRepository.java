@@ -11,4 +11,7 @@ import java.util.List;
 public interface MeasurementRepository extends MongoRepository<Measurement, String> {
     @Query("{ 'metadata.userId': ?0 }")
     List<Measurement> findByUserId(String userId);
+
+    @Query(value = "{ 'metadata.userId': ?0 }", delete = true)
+    void deleteByUserId(String userId);
 }

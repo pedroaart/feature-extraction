@@ -32,10 +32,16 @@ public class MeasurementService {
     public void create(List<MeasurementDTO> measurementData) {
         List<Measurement> measurements = new ArrayList<>();
         for (MeasurementDTO measurementDTO : measurementData) {
-            Optional<Device> device = deviceService.findById(measurementDTO.metadata().deviceId());
+            String deviceId = measurementDTO.metadata().deviceId();
+            String userId = measurementDTO.metadata().userId();
+
+            if (deviceId == null && userId == null) {
+                throw new MeasurementWithoutOwnerException();
+            }
+            //Optional<Device> device = deviceService.findById(measurementDTO.metadata().deviceId());
             Optional<User> user = userService.findById(measurementDTO.metadata().userId());
 
-            if (device.isEmpty() && user.isEmpty()) throw new MeasurementWithoutOwnerException();
+            if (user.isEmpty()) throw new MeasurementWithoutOwnerException();
 
             measurements.add(new Measurement(measurementDTO));
         }
@@ -49,5 +55,9 @@ public class MeasurementService {
 
     public List<Measurement> findAll() {
         return measurementRepository.findAll();
+    }
+
+    public void deleteAllByUserId(String userId) {
+        measurementRepository.deleteByUserId(userId);
     }
 }
